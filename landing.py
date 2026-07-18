@@ -1,225 +1,288 @@
-# ==================================================
-# MAIN
-# ==================================================
+from http.server import HTTPServer, BaseHTTPRequestHandler
 
-def main():
-    creer_base()
-    remplir_base()
+class LandingPageHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html; charset=utf-8')
+        self.end_headers()
 
-    if st.session_state.moteur is None:
-        st.session_state.moteur = RechercheIT()
+        html = """
+        <!DOCTYPE html>
+        <html lang="fr">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>IT Pro - Assistant IT</title>
+            <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    if st.session_state.date_recherche != date.today():
-        st.session_state.date_recherche = date.today()
-        st.session_state.recherches_jour = 0
+                body {
+                    font-family: 'Arial', sans-serif;
+                    text-align: center;
+                    padding: 50px 20px;
+                    background: #0a0a0f;
+                    color: white;
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                }
 
-    # ==================================================
-    # SIDEBAR
-    # ==================================================
+                h1 {
+                    font-size: 52px;
+                    color: #00d4ff;
+                    margin-bottom: 10px;
+                }
 
-    with st.sidebar:
-        st.markdown("""
-        <style>
-            section[data-testid="stSidebar"] {
-                background-color: #1a1a2e !important;
-            }
-        </style>
-        """, unsafe_allow_html=True)
-        st.markdown('<p style="color:#1458; font-size:24px; font-weight:700; text-align:center;">💻 IT Pro</p>',
-                    unsafe_allow_html=True)
-        st.markdown('<p style="color:#AAAAAA; font-size:12px; text-align:center;">1000 diagnostics</p>',
-                    unsafe_allow_html=True)
-        st.markdown("---")
+                .subtitle {
+                    font-size: 20px;
+                    color: #aaa;
+                    margin-bottom: 30px;
+                }
 
-        if st.session_state.user:
-            st.markdown(f'<p style="color:#FFFFFF;">👤 {st.session_state.user}</p>', unsafe_allow_html=True)
+                .search-container {
+                    margin: 30px 0;
+                    width: 100%;
+                    max-width: 600px;
+                }
 
-            plan = st.session_state.plan
-            if plan == "business":
-                st.markdown(
-                    '<div style="background:#9B59B6; padding:12px; border-radius:10px; text-align:center;"><p style="color:white; font-weight:700; margin:0;">🏢 BUSINESS</p></div>',
-                    unsafe_allow_html=True)
-            elif plan == "pro":
-                st.markdown(
-                    '<div style="background:#FFD700; padding:12px; border-radius:10px; text-align:center;"><p style="color:#0a0a0f; font-weight:700; margin:0;">🚀 PRO</p></div>',
-                    unsafe_allow_html=True)
-            else:
-                st.markdown(
-                    '<div style="background:#FF6B6B; padding:12px; border-radius:10px; text-align:center;"><p style="color:white; font-weight:700; margin:0;">🆓 GRATUIT</p></div>',
-                    unsafe_allow_html=True)
-                restant = max(0, 3 - st.session_state.recherches_jour)
-                st.markdown(f'<p style="color:#FFFFFF;">🔍 {restant} recherches restantes</p>', unsafe_allow_html=True)
-                st.progress(st.session_state.recherches_jour / 3)
+                .search-container input[type="text"] {
+                    padding: 16px 20px;
+                    width: 100%;
+                    border-radius: 10px;
+                    border: 2px solid #1a1a2e;
+                    background: #1a1a2e;
+                    color: white;
+                    font-size: 16px;
+                    outline: none;
+                    transition: border-color 0.3s ease;
+                }
 
-            st.markdown("---")
-            menu = ["🏠 Accueil", "📋 Offres", "💳 Virement", "📄 Licence"]
-            
-            entreprise_id = get_entreprise_id(st.session_state.user) if st.session_state.user else None
-            if entreprise_id:
-                menu.append("👥 Équipe")
-            
-            st.session_state.page = st.radio("Navigation", menu, key="sidebar_menu")
+                .search-container input[type="text"]:focus {
+                    border-color: #00d4ff;
+                }
 
-            if st.button("🚪 Déconnexion", use_container_width=True):
-                st.session_state.user = None
-                st.session_state.premium = False
-                st.session_state.plan = "gratuit"
-                st.session_state.recherches = 0
-                st.session_state.recherches_jour = 0
-                st.rerun()
-        else:
-            tab1, tab2 = st.tabs(["🔐 Connexion", "📝 Inscription"])
-            with tab1:
-                email = st.text_input("Email", key="login_email")
-                password = st.text_input("Mot de passe", type="password", key="login_pass")
-                if st.button("Se connecter", use_container_width=True):
-                    user = connexion_utilisateur(email, password)
-                    if user:
-                        st.session_state.user = email
-                        st.session_state.plan = user[3] if user[3] else "gratuit"
-                        st.session_state.premium = bool(user[4])
-                        st.session_state.recherches = user[5] if user[5] else 0
-                        st.session_state.recherches_jour = user[5] if user[5] else 0
-                        st.success("✅ Connecté !")
-                        st.rerun()
-                    else:
-                        st.error("❌ Identifiants incorrects")
-            with tab2:
-                email = st.text_input("Email", key="register_email")
-                password = st.text_input("Mot de passe", type="password", key="register_pass")
-                token_invitation = st.text_input("🔑 Code d'invitation (optionnel)", key="token_invitation", 
-                                                  placeholder="Si vous avez reçu une invitation")
-                
-                if st.button("Créer un compte", use_container_width=True):
-                    if inscription(email, password):
-                        if token_invitation:
-                            invitation = verifier_invitation(token_invitation)
-                            if invitation:
-                                email_invite, entreprise_id = invitation
-                                if email != email_invite:
-                                    st.error("❌ Cette invitation est destinée à un autre email")
-                                else:
-                                    conn = connexion_db()
-                                    cur = conn.cursor()
-                                    cur.execute(
-                                        "UPDATE utilisateurs SET entreprise_id = ?, plan = 'business', premium = 1 WHERE email = ?",
-                                        (entreprise_id, email)
-                                    )
-                                    conn.commit()
-                                    conn.close()
-                                    utiliser_invitation(token_invitation)
-                                    st.success("✅ Compte créé ! Vous avez rejoint l'équipe. Connectez-vous.")
-                            else:
-                                st.warning("⚠️ Code d'invitation invalide ou expiré")
-                        else:
-                            st.success("✅ Compte créé ! Connectez-vous")
-                    else:
-                        st.error("❌ Email déjà utilisé")
+                .search-container button {
+                    margin-top: 15px;
+                }
 
-    # ==================================================
-    # GESTION DES PAGES
-    # ==================================================
+                .btn {
+                    background: #00d4ff;
+                    color: #0a0a0f;
+                    padding: 15px 40px;
+                    border: none;
+                    border-radius: 10px;
+                    font-size: 18px;
+                    font-weight: 700;
+                    cursor: pointer;
+                    text-decoration: none;
+                    display: inline-block;
+                    margin: 8px;
+                    transition: transform 0.2s ease, background 0.2s ease;
+                }
 
-    if st.session_state.page == "📋 Offres":
-        page_offres()
-        return
-    if st.session_state.page == "💳 Virement":
-        page_virement()
-        return
-    if st.session_state.page == "📄 Licence":
-        page_licence()
-        return
-    if st.session_state.page == "👥 Équipe":
-        page_equipe()
-        return
+                .btn:hover {
+                    background: #00b8e6;
+                    transform: scale(1.03);
+                }
 
-    # ==================================================
-    # ACCUEIL
-    # ==================================================
+                .btn-gold {
+                    background: #FFD700;
+                    color: #0a0a0f;
+                    padding: 15px 40px;
+                    border: none;
+                    border-radius: 10px;
+                    font-size: 18px;
+                    font-weight: 700;
+                    cursor: pointer;
+                    text-decoration: none;
+                    display: inline-block;
+                    margin: 8px;
+                    transition: transform 0.2s ease, background 0.2s ease;
+                }
 
-    # Si l'utilisateur n'est pas connecté : landing page
-    if not st.session_state.user:
-        page_landing()
-        st.info("🔐 Connectez-vous dans la barre latérale pour accéder à l'application.")
-        return
+                .btn-gold:hover {
+                    background: #e6c200;
+                    transform: scale(1.03);
+                }
 
-    # Si l'utilisateur est connecté : application
-    st.markdown(
-        '<p style="color:#00d4ff; font-size:48px; font-weight:900; text-align:center;">🔧 Assistant Dépannage IT</p>',
-        unsafe_allow_html=True)
-    st.markdown(
-        '<p style="color:#aaa; text-align:center; font-size:18px;">Par IT Pro Solutions - <span style="color:#FFD700;">150+ diagnostics</span></p>',
-        unsafe_allow_html=True)
-    st.markdown("---")
+                .btn-dark {
+                    background: #333;
+                    color: white;
+                    padding: 15px 40px;
+                    border: none;
+                    border-radius: 10px;
+                    font-size: 18px;
+                    font-weight: 700;
+                    cursor: pointer;
+                    text-decoration: none;
+                    display: inline-block;
+                    margin: 8px;
+                    transition: transform 0.2s ease, background 0.2s ease;
+                }
 
-    question = st.text_area("Décrivez votre problème :", height=100,
-                            placeholder="Ex: mon PC est lent, le wifi ne marche pas, erreur Windows...")
+                .btn-dark:hover {
+                    background: #555;
+                    transform: scale(1.03);
+                }
 
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        if st.button("🔍 Rechercher", type="primary", use_container_width=True):
-            if not st.session_state.user:
-                st.error("❌ Connectez-vous d'abord")
-            elif not st.session_state.premium and st.session_state.recherches_jour >= 3:
-                st.error("🔴 LIMITE ATTEINTE ! Passez Premium pour continuer.")
-                if st.button("VOIR LES OFFRES"):
-                    st.session_state.page = "📋 Offres"
-                    st.rerun()
-            elif question.strip():
-                with st.spinner("Recherche en cours..."):
-                    if not st.session_state.premium:
-                        st.session_state.recherches_jour += 1
-                        st.session_state.recherches += 1
-                    results = st.session_state.moteur.rechercher(question)
-                    if results:
-                        st.success(f"✅ {len(results)} résultat(s) trouvé(s)")
-                        for panne, score in results:
-                            with st.expander(f"🔹 {panne['titre']} (Score: {score})"):
-                                st.markdown(f"**Catégorie:** {panne['categorie']}")
-                                st.markdown(f"**Diagnostic:** {panne['diagnostic']}")
-                                st.markdown(f"**Procédure:**\n{panne['procedure']}")
-                                if panne.get('questions'):
-                                    st.info(f"❓ {panne['questions']}")
+                .features {
+                    display: flex;
+                    justify-content: center;
+                    gap: 30px;
+                    margin: 40px 0;
+                    flex-wrap: wrap;
+                }
 
-                        # Boutons d'export (Pro/Business)
-                        if st.session_state.plan in ["pro", "business"]:
-                            st.markdown("---")
-                            col_btn1, col_btn2 = st.columns(2)
-                            with col_btn1:
-                                pdf_data = generer_pdf_resultats(results, question)
-                                if pdf_data:
-                                    st.download_button(
-                                        label="📄 Télécharger en PDF",
-                                        data=pdf_data,
-                                        file_name=f"resultats_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
-                                        mime="application/pdf",
-                                        key="pdf_download"
-                                    )
-                                else:
-                                    st.warning("Export PDF indisponible (bibliothèque manquante)")
-                            with col_btn2:
-                                word_data = generer_word_resultats(results, question)
-                                if word_data:
-                                    st.download_button(
-                                        label="📝 Télécharger en Word",
-                                        data=word_data,
-                                        file_name=f"resultats_{datetime.now().strftime('%Y%m%d_%H%M%S')}.docx",
-                                        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                                        key="word_download"
-                                    )
-                                else:
-                                    st.warning("Export Word indisponible (bibliothèque manquante)")
-                        else:
-                            st.info("🔒 L'export PDF/Word est disponible uniquement pour les abonnés **Pro** et **Business**.")
-                    else:
-                        st.warning("😕 Aucun résultat trouvé")
-            else:
-                st.warning("⚠️ Décrivez votre problème")
+                .feature {
+                    background: #1a1a2e;
+                    padding: 25px 20px;
+                    border-radius: 14px;
+                    width: 200px;
+                    border: 1px solid #2a2a4a;
+                    transition: transform 0.2s ease, border-color 0.2s ease;
+                }
 
-    st.markdown("---")
-    st.markdown(
-        '<p style="text-align:center; color:#444; font-size:12px;">© 2026 <strong style="color:#FFD700;">IT Pro Solutions</strong> - Tous droits réservés</p>',
-        unsafe_allow_html=True)
+                .feature:hover {
+                    transform: translateY(-5px);
+                    border-color: #00d4ff;
+                }
 
-if __name__ == "__main__":
-    main()
+                .feature h3 {
+                    color: #00d4ff;
+                    font-size: 22px;
+                    margin-bottom: 8px;
+                }
+
+                .feature p {
+                    color: #bbb;
+                    font-size: 15px;
+                }
+
+                .footer {
+                    margin-top: 50px;
+                    color: #555;
+                    font-size: 14px;
+                    line-height: 1.8;
+                }
+
+                .footer a {
+                    color: #00d4ff;
+                    text-decoration: none;
+                }
+
+                .footer a:hover {
+                    text-decoration: underline;
+                }
+
+                @media (max-width: 700px) {
+                    h1 { font-size: 32px; }
+                    .subtitle { font-size: 16px; }
+                    .features { gap: 15px; }
+                    .feature { width: 160px; padding: 18px 12px; }
+                    .btn, .btn-gold, .btn-dark {
+                        padding: 12px 25px;
+                        font-size: 15px;
+                        display: block;
+                        margin: 10px auto;
+                        width: 80%;
+                        max-width: 280px;
+                    }
+                }
+
+                @media (max-width: 450px) {
+                    h1 { font-size: 26px; }
+                    .feature { width: 100%; max-width: 280px; }
+                    .search-container input[type="text"] { font-size: 14px; padding: 14px 16px; }
+                }
+            </style>
+        </head>
+        <body>
+
+            <!-- ===== TITRE ===== -->
+            <h1>🔧 IT Pro</h1>
+            <p class="subtitle">Assistant IT – Diagnostics &amp; Abonnements</p>
+
+            <!-- ===== BARRE DE RECHERCHE ===== -->
+            <div class="search-container">
+                <input type="text" id="search" placeholder="Décrivez votre problème (ex: PC lent, wifi...)">
+                <br>
+                <button class="btn" onclick="search()">🔍 Rechercher</button>
+            </div>
+
+            <!-- ===== FONCTIONNALITÉS ===== -->
+            <div class="features">
+                <div class="feature">
+                    <h3>⚡ Rapide</h3>
+                    <p>Résultats en 0,5 seconde</p>
+                </div>
+                <div class="feature">
+                    <h3>🔒 Sécurisé</h3>
+                    <p>Mots de passe hachés</p>
+                </div>
+                <div class="feature">
+                    <h3>📊 1000+ diagnostics</h3>
+                    <p>Base complète</p>
+                </div>
+            </div>
+
+            <!-- ===== BOUTONS ===== -->
+            <div style="margin: 30px 0;">
+                <a href="https://moteur-de-recherche-it-mzztfdhtggde7omb8uhzek.streamlit.app/"
+                   class="btn" target="_blank">
+                   🚀 Accéder à l'application
+                </a>
+
+                <a href="https://moteur-de-recherche-it-mzztfdhtggde7omb8uhzek.streamlit.app/Offres"
+                   class="btn-gold" target="_blank">
+                   💳 Voir les offres / Payer
+                </a>
+
+                <a href="https://github.com/vanschoor-stephanie/moteur-de-recherche-IT"
+                   class="btn-dark" target="_blank">
+                   🐙 Voir sur GitHub
+                </a>
+            </div>
+
+            <!-- ===== PIED DE PAGE ===== -->
+            <div class="footer">
+                <p>IT Pro – Par <strong>Stéphanie Vanschoor</strong></p>
+                <p style="font-size: 12px;">Version 2.0 – 2026 &nbsp;|&nbsp;
+                    <a href="https://github.com/vanschoor-stephanie/moteur-de-recherche-IT" target="_blank">GitHub</a>
+                </p>
+            </div>
+
+            <script>
+                function search() {
+                    var query = document.getElementById('search').value;
+                    if (query.trim() !== '') {
+                        window.location.href =
+                            'https://moteur-de-recherche-it-mzztfdhtggde7omb8uhzek.streamlit.app/?q=' +
+                            encodeURIComponent(query);
+                    } else {
+                        alert('Veuillez entrer une description de votre problème.');
+                    }
+                }
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    document.getElementById('search').addEventListener('keypress', function(e) {
+                        if (e.key === 'Enter') {
+                            search();
+                        }
+                    });
+                });
+            </script>
+
+        </body>
+        </html>
+        """
+
+        self.wfile.write(html.encode('utf-8'))
+
+if __name__ == '__main__':
+    port = 8000
+    server = HTTPServer(('0.0.0.0', port), LandingPageHandler)
+    print(f"🚀 Serveur lancé sur http://localhost:{port}")
+    print("Appuie sur Ctrl+C pour arrêter")
+    server.serve_forever()
