@@ -3,95 +3,91 @@ import streamlit as st
 st.set_page_config(
     page_title="IT Pro",
     page_icon="🔧",
-    layout="wide",
-    initial_sidebar_state="collapsed"
+    layout="wide"
 )
 
 st.markdown("""
 <style>
 
-/* Cache le menu Streamlit */
 #MainMenu, footer, header {
     visibility: hidden;
 }
 
-.stApp{
+.stApp {
     background:#0a0a0f;
     color:white;
 }
 
-.hero{
+.hero {
     text-align:center;
-    padding:60px 20px 40px;
+    padding:80px 20px 50px;
 }
 
-.hero h1{
+.hero h1 {
     font-size:70px;
     color:#00d4ff;
-    margin-bottom:10px;
+    margin-bottom:15px;
 }
 
-.hero p{
-    font-size:24px;
-    color:#bdbdbd;
+.hero p {
+    font-size:25px;
+    color:#aaa;
 }
 
-.card{
-    background:#151525;
+.card {
+    background:#1a1a2e;
     padding:30px;
     border-radius:15px;
-    border:1px solid #2a2a45;
     text-align:center;
-    transition:.3s;
+    border:1px solid #2a2a4a;
 }
 
-.card:hover{
-    border-color:#00d4ff;
-    transform:translateY(-6px);
-}
-
-.card h3{
+.card h3 {
     color:#00d4ff;
+    font-size:25px;
 }
 
-.center{
-    text-align:center;
+.card p {
+    color:#bbb;
+    font-size:16px;
 }
 
-.bigbutton{
+.button {
     display:inline-block;
     padding:18px 45px;
     margin:10px;
-    border-radius:12px;
+    border-radius:10px;
     text-decoration:none;
-    font-size:20px;
+    font-size:18px;
     font-weight:bold;
 }
 
-.blue{
+.blue {
     background:#00d4ff;
-    color:black;
+    color:#000;
 }
 
-.gold{
+.gold {
     background:#FFD700;
-    color:black;
+    color:#000;
 }
 
-.dark{
+.dark {
     background:#333;
     color:white;
 }
 
-.footer{
+.footer {
     text-align:center;
-    color:#777;
-    margin-top:60px;
-    font-size:14px;
+    margin-top:70px;
+    color:#666;
 }
 
 </style>
 """, unsafe_allow_html=True)
+
+
+# HERO
 
 st.markdown("""
 <div class="hero">
@@ -99,73 +95,76 @@ st.markdown("""
 <h1>🔧 IT Pro</h1>
 
 <p>
-L'assistant intelligent pour le diagnostic informatique
+Assistant IT intelligent<br>
+Diagnostics informatiques & solutions professionnelles
 </p>
 
 </div>
 """, unsafe_allow_html=True)
 
-question = st.text_input(
-    "",
-    placeholder="💬 Décrivez votre problème informatique..."
-)
 
-col = st.columns([1,2,1])
+# FEATURES
 
-with col[1]:
-    st.button("🔍 Rechercher", use_container_width=True)
+col1, col2, col3 = st.columns(3)
 
-st.write("")
-
-c1, c2, c3 = st.columns(3)
-
-with c1:
+with col1:
     st.markdown("""
-<div class="card">
-<h3>⚡ Rapide</h3>
-<p>
-Diagnostic en quelques secondes.
-</p>
-</div>
-""", unsafe_allow_html=True)
+    <div class="card">
+    <h3>⚡ Rapide</h3>
+    <p>
+    Trouvez rapidement des solutions
+    à vos problèmes informatiques.
+    </p>
+    </div>
+    """, unsafe_allow_html=True)
 
-with c2:
-    st.markdown("""
-<div class="card">
-<h3>🔒 Sécurisé</h3>
-<p>
-Vos données restent protégées.
-</p>
-</div>
-""", unsafe_allow_html=True)
 
-with c3:
+with col2:
     st.markdown("""
-<div class="card">
-<h3>📚 +1000 solutions</h3>
-<p>
-Une base de connaissances complète.
-</p>
-</div>
-""", unsafe_allow_html=True)
+    <div class="card">
+    <h3>🔒 Sécurisé</h3>
+    <p>
+    Une plateforme pensée pour
+    protéger vos données.
+    </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+with col3:
+    st.markdown("""
+    <div class="card">
+    <h3>📚 Expertise IT</h3>
+    <p>
+    Une base complète de diagnostics
+    et solutions techniques.
+    </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+
+# BOUTONS
 
 st.write("")
 st.write("")
 
 st.markdown("""
-<div class="center">
+<div style="text-align:center;">
 
-<a class="bigbutton blue"
+<a class="button blue"
 href="https://moteur-de-recherche-it-mzztfdhtggde7omb8uhzek.streamlit.app/">
 🚀 Accéder à l'application
 </a>
 
-<a class="bigbutton gold"
+
+<a class="button gold"
 href="https://moteur-de-recherche-it-mzztfdhtggde7omb8uhzek.streamlit.app/Offres">
-💳 Offres Premium
+💳 Voir les offres Premium
 </a>
 
-<a class="bigbutton dark"
+
+<a class="button dark"
 href="https://github.com/vanschoor-stephanie/moteur-de-recherche-IT">
 🐙 GitHub
 </a>
@@ -173,14 +172,14 @@ href="https://github.com/vanschoor-stephanie/moteur-de-recherche-IT">
 </div>
 """, unsafe_allow_html=True)
 
-st.write("")
-st.write("---")
+
+
+# FOOTER
 
 st.markdown("""
 <div class="footer">
 
 <b>IT Pro</b><br>
-
 Développé par Stéphanie Vanschoor
 
 <br><br>
