@@ -244,10 +244,7 @@ href="https://moteur-de-recherche-it-mzztfdhtggde7omb8uhzek.streamlit.app/Offres
 </a>
 
 
-<a class="button dark"
-href="https://github.com/vanschoor-stephanie/moteur-de-recherche-IT">
-🐙 GitHub
-</a>
+
 
 </div>
 """, unsafe_allow_html=True)
