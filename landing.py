@@ -1,149 +1,158 @@
-import os
+import streamlit as st
 
-html = """
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>IT Pro - Assistant IT</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 50px 20px;
-            background: #0a0a0f;
-            color: white;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        h1 { font-size: 52px; color: #00d4ff; margin-bottom: 10px; }
-        .subtitle { font-size: 20px; color: #aaa; margin-bottom: 30px; }
-        .search-container { margin: 30px 0; width: 100%; max-width: 600px; }
-        .search-container input[type="text"] {
-            padding: 16px 20px;
-            width: 100%;
-            border-radius: 10px;
-            border: 2px solid #1a1a2e;
-            background: #1a1a2e;
-            color: white;
-            font-size: 16px;
-            outline: none;
-        }
-        .search-container input[type="text"]:focus { border-color: #00d4ff; }
-        .btn, .btn-gold, .btn-dark {
-            padding: 15px 40px;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            margin: 8px;
-            transition: 0.2s;
-        }
-        .btn { background: #00d4ff; color: #0a0a0f; }
-        .btn:hover { background: #00b8e6; transform: scale(1.03); }
-        .btn-gold { background: #FFD700; color: #0a0a0f; }
-        .btn-gold:hover { background: #e6c200; transform: scale(1.03); }
-        .btn-dark { background: #333; color: white; }
-        .btn-dark:hover { background: #555; transform: scale(1.03); }
-        .features {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin: 40px 0;
-            flex-wrap: wrap;
-        }
-        .feature {
-            background: #1a1a2e;
-            padding: 25px 20px;
-            border-radius: 14px;
-            width: 200px;
-            border: 1px solid #2a2a4a;
-        }
-        .feature:hover { transform: translateY(-5px); border-color: #00d4ff; }
-        .feature h3 { color: #00d4ff; font-size: 22px; margin-bottom: 8px; }
-        .feature p { color: #bbb; font-size: 15px; }
-        .footer { margin-top: 50px; color: #555; font-size: 14px; line-height: 1.8; }
-        .footer a { color: #00d4ff; text-decoration: none; }
-        @media (max-width: 700px) {
-            h1 { font-size: 32px; }
-            .subtitle { font-size: 16px; }
-            .feature { width: 160px; padding: 18px 12px; }
-            .btn, .btn-gold, .btn-dark {
-                padding: 12px 25px;
-                font-size: 15px;
-                display: block;
-                margin: 10px auto;
-                width: 80%;
-                max-width: 280px;
-            }
-        }
-        @media (max-width: 450px) {
-            h1 { font-size: 26px; }
-            .feature { width: 100%; max-width: 280px; }
-        }
-    </style>
-</head>
-<body>
+st.set_page_config(
+    page_title="IT Pro",
+    page_icon="🔧",
+    layout="wide"
+)
 
-    <h1>🔧 IT Pro</h1>
-    <p class="subtitle">Assistant IT – Diagnostics &amp; Abonnements</p>
+# CSS
+st.markdown("""
+<style>
 
-    <div class="search-container">
-        <input type="text" id="search" placeholder="Décrivez votre problème...">
-        <br>
-        <button class="btn" onclick="search()">🔍 Rechercher</button>
+.stApp{
+    background: linear-gradient(180deg,#0a0a0f,#111827);
+    color:white;
+}
+
+h1{
+    text-align:center;
+    color:#00d4ff;
+    font-size:64px;
+    margin-bottom:0;
+}
+
+.subtitle{
+    text-align:center;
+    color:#bdbdbd;
+    font-size:22px;
+    margin-bottom:40px;
+}
+
+div[data-testid="stTextInput"] input{
+    background:#1a1a2e;
+    color:white;
+    border-radius:12px;
+    border:2px solid #1a1a2e;
+    padding:15px;
+}
+
+div[data-testid="stTextInput"] input:focus{
+    border:2px solid #00d4ff;
+}
+
+.feature{
+    background:#1a1a2e;
+    padding:25px;
+    border-radius:15px;
+    text-align:center;
+    border:1px solid #2b2b45;
+    height:180px;
+}
+
+.feature h3{
+    color:#00d4ff;
+}
+
+.footer{
+    text-align:center;
+    color:#888;
+    margin-top:60px;
+}
+
+.stButton>button{
+    width:100%;
+    border-radius:12px;
+    height:50px;
+    font-size:18px;
+    font-weight:bold;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# Header
+st.markdown("<h1>🔧 IT Pro</h1>", unsafe_allow_html=True)
+st.markdown(
+    "<div class='subtitle'>Assistant IT • Diagnostics • Solutions • Base de connaissances</div>",
+    unsafe_allow_html=True,
+)
+
+# Barre de recherche
+question = st.text_input(
+    "",
+    placeholder="Décrivez votre problème informatique..."
+)
+
+if st.button("🔍 Rechercher"):
+    if question:
+        st.switch_page("pages/Moteur.py")  # si ton moteur est une page Streamlit
+    else:
+        st.warning("Veuillez décrire votre problème.")
+
+st.write("")
+st.write("")
+
+# Features
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.markdown("""
+    <div class="feature">
+        <h3>⚡ Rapide</h3>
+        <p>Diagnostic en moins d'une seconde.</p>
     </div>
+    """, unsafe_allow_html=True)
 
-    <div class="features">
-        <div class="feature"><h3>⚡ Rapide</h3><p>Résultats en 0,5 seconde</p></div>
-        <div class="feature"><h3>🔒 Sécurisé</h3><p>Mots de passe hachés</p></div>
-        <div class="feature"><h3>📊 1000+ diagnostics</h3><p>Base complète</p></div>
+with col2:
+    st.markdown("""
+    <div class="feature">
+        <h3>🔒 Sécurisé</h3>
+        <p>Données protégées et navigation sécurisée.</p>
     </div>
+    """, unsafe_allow_html=True)
 
-    <div style="margin: 30px 0;">
-        <a href="https://moteur-de-recherche-it-mzztfdhtggde7omb8uhzek.streamlit.app/" class="btn" target="_blank">🚀 Accéder à l'application</a>
-        <a href="https://moteur-de-recherche-it-mzztfdhtggde7omb8uhzek.streamlit.app/Offres" class="btn-gold" target="_blank">💳 Voir les offres / Payer</a>
-        <a href="https://github.com/vanschoor-stephanie/moteur-de-recherche-IT" class="btn-dark" target="_blank">🐙 Voir sur GitHub</a>
+with col3:
+    st.markdown("""
+    <div class="feature">
+        <h3>📚 +1000 diagnostics</h3>
+        <p>Base de connaissances IT complète.</p>
     </div>
+    """, unsafe_allow_html=True)
 
-    <div class="footer">
-        <p>IT Pro – Par <strong>Stéphanie Vanschoor</strong></p>
-        <p style="font-size: 12px;">Version 2.0 – 2026 &nbsp;|&nbsp; <a href="https://github.com/vanschoor-stephanie/moteur-de-recherche-IT" target="_blank">GitHub</a></p>
-    </div>
+st.write("")
+st.write("")
 
-    <script>
-        function search() {
-            var q = document.getElementById('search').value;
-            if (q.trim() !== '') {
-                window.location.href = 'https://moteur-de-recherche-it-mzztfdhtggde7omb8uhzek.streamlit.app/?q=' + encodeURIComponent(q);
-            } else {
-                alert('Veuillez entrer une description de votre problème.');
-            }
-        }
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('search').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') search();
-            });
-        });
-    </script>
+# Boutons
+c1, c2, c3 = st.columns(3)
 
-</body>
-</html>
-"""
+with c1:
+    st.link_button(
+        "🚀 Accéder à l'application",
+        "https://moteur-de-recherche-it-mzztfdhtggde7omb8uhzek.streamlit.app/"
+    )
 
-# Sauvegarder le fichier index.html
-with open("index.html", "w", encoding="utf-8") as f:
-    f.write(html)
+with c2:
+    st.link_button(
+        "💳 Voir les offres",
+        "https://moteur-de-recherche-it-mzztfdhtggde7omb8uhzek.streamlit.app/Offres"
+    )
 
-print("✅ Fichier index.html généré !")
-print("📁 Tu peux maintenant :")
-print("   - L'ouvrir dans ton navigateur")
-print("   - Le déposer sur GitHub Pages")
-print("   - Le partager avec n'importe qui")
+with c3:
+    st.link_button(
+        "🐙 GitHub",
+        "https://github.com/vanschoor-stephanie/moteur-de-recherche-IT"
+    )
+
+st.write("")
+st.write("---")
+
+st.markdown("""
+<div class="footer">
+<h3>IT Pro</h3>
+
+Développé par <b>Stéphanie Vanschoor</b>
+
+Version 2.0 • 2026
+</div>
+""", unsafe_allow_html=True)
