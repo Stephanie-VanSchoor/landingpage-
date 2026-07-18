@@ -1,131 +1,125 @@
-from http.server import HTTPServer, BaseHTTPRequestHandler
+import streamlit as st
 
+st.set_page_config(
+    page_title="IT Pro - Assistant IT",
+    page_icon="🔧",
+    layout="wide"
+)
 
-class LandingPageHandler(BaseHTTPRequestHandler):
-
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header("Content-type", "text/html; charset=utf-8")
-        self.end_headers()
-
-        html = """
+html = """
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>IT Pro - Assistant IT</title>
+    <meta charset="UTF-8">
+    <title>IT Pro - Assistant IT</title>
 
-<style>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background: #0a0a0f;
+            color: white;
+        }
 
-body{
-    font-family:Arial,sans-serif;
-    text-align:center;
-    padding:50px;
-    background:#0a0a0f;
-    color:white;
-}
+        h1 {
+            font-size: 48px;
+            color: #00d4ff;
+        }
 
-h1{
-    font-size:48px;
-    color:#00d4ff;
-}
+        .btn {
+            background: #00d4ff;
+            color: #0a0a0f;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+        }
 
-.subtitle{
-    font-size:20px;
-    color:#aaa;
-}
+        .btn:hover {
+            background: #00b8e6;
+        }
 
-.search{
-    margin:30px 0;
-}
+        .btn-gold {
+            background: #FFD700;
+            color: #0a0a0f;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+            font-weight: bold;
+        }
 
-input[type=text]{
-    width:60%;
-    max-width:500px;
-    padding:15px;
-    border-radius:8px;
-    border:2px solid #1a1a2e;
-    background:#1a1a2e;
-    color:white;
-    font-size:16px;
-}
+        .btn-gold:hover {
+            background: #e6c200;
+        }
 
-input[type=text]:focus{
-    border-color:#00d4ff;
-    outline:none;
-}
+        .btn-dark {
+            background: #333;
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+        }
 
-.btn{
-    background:#00d4ff;
-    color:#000;
-    padding:15px 40px;
-    border-radius:8px;
-    text-decoration:none;
-    display:inline-block;
-    margin:10px;
-    font-size:18px;
-    font-weight:bold;
-}
+        .btn-dark:hover {
+            background: #555;
+        }
 
-.btn:hover{
-    background:#00b8e6;
-}
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
 
-.btn-gold{
-    background:#FFD700;
-    color:black;
-    padding:15px 40px;
-    border-radius:8px;
-    text-decoration:none;
-    display:inline-block;
-    margin:10px;
-    font-size:18px;
-    font-weight:bold;
-}
+        .feature {
+            background: #1a1a2e;
+            padding: 20px;
+            border-radius: 12px;
+            width: 200px;
+        }
 
-.btn-gold:hover{
-    background:#e6c200;
-}
+        .feature h3 {
+            color: #00d4ff;
+        }
 
-.btn-dark{
-    background:#333;
-    color:white;
-    padding:15px 40px;
-    border-radius:8px;
-    text-decoration:none;
-    display:inline-block;
-    margin:10px;
-}
+        .footer {
+            margin-top: 50px;
+            color: #666;
+            font-size: 14px;
+        }
 
-.btn-dark:hover{
-    background:#555;
-}
+        input[type="text"] {
+            padding: 15px;
+            width: 60%;
+            max-width: 500px;
+            border-radius: 8px;
+            border: 2px solid #1a1a2e;
+            background: #1a1a2e;
+            color: white;
+            font-size: 16px;
+        }
 
-.features{
-    display:flex;
-    justify-content:center;
-    gap:30px;
-    flex-wrap:wrap;
-    margin:40px 0;
-}
-
-.feature{
-    width:200px;
-    background:#1a1a2e;
-    padding:20px;
-    border-radius:12px;
-}
-
-.feature h3{
-    color:#00d4ff;
-}
-
-.footer{
-    margin-top:60px;
-    color:#666;
-}
-
-</style>
+        input[type="text"]:focus {
+            border-color: #00d4ff;
+            outline: none;
+        }
+    </style>
 
 </head>
 
@@ -133,99 +127,77 @@ input[type=text]:focus{
 
 <h1>🔧 IT Pro - Assistant IT</h1>
 
-<p class="subtitle">
-Diagnostics informatiques • Solutions • Abonnements
+<p style="font-size:20px;color:#aaa;">
+Diagnostics informatiques & abonnements Pro/Business
 </p>
 
-<div class="search">
+<div style="margin:30px 0;">
+    <input
+        type="text"
+        placeholder="Décrivez votre problème..."
+        id="search">
 
-<input
-id="search"
-type="text"
-placeholder="Décrivez votre problème...">
+    <br><br>
 
-<br><br>
-
-<button class="btn" onclick="search()">
-🔍 Rechercher
-</button>
-
+    <button class="btn" onclick="search()">
+        🔍 Rechercher
+    </button>
 </div>
 
 <div class="features">
 
-<div class="feature">
-<h3>⚡ Rapide</h3>
-<p>Résultats en moins d'une seconde.</p>
+    <div class="feature">
+        <h3>⚡ Rapide</h3>
+        <p>Résultats en 0,5 seconde</p>
+    </div>
+
+    <div class="feature">
+        <h3>🔒 Sécurisé</h3>
+        <p>Mots de passe hachés</p>
+    </div>
+
+    <div class="feature">
+        <h3>📊 1000+ diagnostics</h3>
+        <p>Base complète</p>
+    </div>
+
 </div>
 
-<div class="feature">
-<h3>🔒 Sécurisé</h3>
-<p>Mots de passe protégés.</p>
-</div>
+<div style="margin:40px 0;">
 
-<div class="feature">
-<h3>📊 1000+ diagnostics</h3>
-<p>Base de connaissances complète.</p>
-</div>
-
-</div>
-
-<div>
-
-<a class="btn"
-href="https://moteur-de-recherche-it-mzztfdhtggde7omb8uhzek.streamlit.app/">
+<a href="https://moteur-de-recherche-it-mzztfdhtggde7omb8uhzek.streamlit.app/" class="btn">
 🚀 Accéder à l'application
 </a>
 
-<a class="btn-gold"
-href="https://moteur-de-recherche-it-mzztfdhtggde7omb8uhzek.streamlit.app/Offres">
-💳 Voir les offres
+<a href="https://moteur-de-recherche-it-mzztfdhtggde7omb8uhzek.streamlit.app/Offres" class="btn-gold">
+💳 Voir les offres / Payer
 </a>
 
-<a class="btn-dark"
-href="https://github.com/vanschoor-stephanie/moteur-de-recherche-IT">
-🐙 GitHub
+<a href="https://github.com/vanschoor-stephanie/moteur-de-recherche-IT" class="btn-dark">
+🐙 Voir sur GitHub
 </a>
 
 </div>
 
 <div class="footer">
-IT Pro • Stéphanie Vanschoor<br>
-Version 2.0 • 2026
+    <p>IT Pro - Par Stéphanie Vanschoor</p>
+    <p style="font-size:12px;">Version 2.0 - 2026</p>
 </div>
 
 <script>
+function search() {
+    var query = document.getElementById("search").value;
 
-function search(){
-
-    var q=document.getElementById("search").value;
-
-    if(q.trim()!=""){
-
-        window.location.href=
+    if(query.trim() !== ""){
+        window.location.href =
         "https://moteur-de-recherche-it-mzztfdhtggde7omb8uhzek.streamlit.app/?q="
-        +encodeURIComponent(q);
-
+        + encodeURIComponent(query);
     }
-
 }
-
 </script>
 
 </body>
 </html>
 """
 
-        self.wfile.write(html.encode("utf-8"))
-
-
-if __name__ == "__main__":
-
-    PORT = 8000
-
-    server = HTTPServer(("0.0.0.0", PORT), LandingPageHandler)
-
-    print(f"🚀 Landing Page disponible sur : http://localhost:{PORT}")
-
-    server.serve_forever()
+st.markdown(html, unsafe_allow_html=True)
