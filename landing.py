@@ -1,203 +1,191 @@
 import streamlit as st
 
 st.set_page_config(
-    page_title="IT Pro - Assistant IT",
+    page_title="IT Pro",
     page_icon="🔧",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
-html = """
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>IT Pro - Assistant IT</title>
+st.markdown("""
+<style>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 50px;
-            background: #0a0a0f;
-            color: white;
-        }
+/* Cache le menu Streamlit */
+#MainMenu, footer, header {
+    visibility: hidden;
+}
 
-        h1 {
-            font-size: 48px;
-            color: #00d4ff;
-        }
+.stApp{
+    background:#0a0a0f;
+    color:white;
+}
 
-        .btn {
-            background: #00d4ff;
-            color: #0a0a0f;
-            padding: 15px 40px;
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            margin: 10px;
-        }
+.hero{
+    text-align:center;
+    padding:60px 20px 40px;
+}
 
-        .btn:hover {
-            background: #00b8e6;
-        }
+.hero h1{
+    font-size:70px;
+    color:#00d4ff;
+    margin-bottom:10px;
+}
 
-        .btn-gold {
-            background: #FFD700;
-            color: #0a0a0f;
-            padding: 15px 40px;
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            margin: 10px;
-            font-weight: bold;
-        }
+.hero p{
+    font-size:24px;
+    color:#bdbdbd;
+}
 
-        .btn-gold:hover {
-            background: #e6c200;
-        }
+.card{
+    background:#151525;
+    padding:30px;
+    border-radius:15px;
+    border:1px solid #2a2a45;
+    text-align:center;
+    transition:.3s;
+}
 
-        .btn-dark {
-            background: #333;
-            color: white;
-            padding: 15px 40px;
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            margin: 10px;
-        }
+.card:hover{
+    border-color:#00d4ff;
+    transform:translateY(-6px);
+}
 
-        .btn-dark:hover {
-            background: #555;
-        }
+.card h3{
+    color:#00d4ff;
+}
 
-        .features {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin: 40px 0;
-            flex-wrap: wrap;
-        }
+.center{
+    text-align:center;
+}
 
-        .feature {
-            background: #1a1a2e;
-            padding: 20px;
-            border-radius: 12px;
-            width: 200px;
-        }
+.bigbutton{
+    display:inline-block;
+    padding:18px 45px;
+    margin:10px;
+    border-radius:12px;
+    text-decoration:none;
+    font-size:20px;
+    font-weight:bold;
+}
 
-        .feature h3 {
-            color: #00d4ff;
-        }
+.blue{
+    background:#00d4ff;
+    color:black;
+}
 
-        .footer {
-            margin-top: 50px;
-            color: #666;
-            font-size: 14px;
-        }
+.gold{
+    background:#FFD700;
+    color:black;
+}
 
-        input[type="text"] {
-            padding: 15px;
-            width: 60%;
-            max-width: 500px;
-            border-radius: 8px;
-            border: 2px solid #1a1a2e;
-            background: #1a1a2e;
-            color: white;
-            font-size: 16px;
-        }
+.dark{
+    background:#333;
+    color:white;
+}
 
-        input[type="text"]:focus {
-            border-color: #00d4ff;
-            outline: none;
-        }
-    </style>
+.footer{
+    text-align:center;
+    color:#777;
+    margin-top:60px;
+    font-size:14px;
+}
 
-</head>
+</style>
+""", unsafe_allow_html=True)
 
-<body>
+st.markdown("""
+<div class="hero">
 
-<h1>🔧 IT Pro - Assistant IT</h1>
+<h1>🔧 IT Pro</h1>
 
-<p style="font-size:20px;color:#aaa;">
-Diagnostics informatiques & abonnements Pro/Business
+<p>
+L'assistant intelligent pour le diagnostic informatique
 </p>
 
-<div style="margin:30px 0;">
-    <input
-        type="text"
-        placeholder="Décrivez votre problème..."
-        id="search">
-
-    <br><br>
-
-    <button class="btn" onclick="search()">
-        🔍 Rechercher
-    </button>
 </div>
+""", unsafe_allow_html=True)
 
-<div class="features">
+question = st.text_input(
+    "",
+    placeholder="💬 Décrivez votre problème informatique..."
+)
 
-    <div class="feature">
-        <h3>⚡ Rapide</h3>
-        <p>Résultats en 0,5 seconde</p>
-    </div>
+col = st.columns([1,2,1])
 
-    <div class="feature">
-        <h3>🔒 Sécurisé</h3>
-        <p>Mots de passe hachés</p>
-    </div>
+with col[1]:
+    st.button("🔍 Rechercher", use_container_width=True)
 
-    <div class="feature">
-        <h3>📊 1000+ diagnostics</h3>
-        <p>Base complète</p>
-    </div>
+st.write("")
 
+c1, c2, c3 = st.columns(3)
+
+with c1:
+    st.markdown("""
+<div class="card">
+<h3>⚡ Rapide</h3>
+<p>
+Diagnostic en quelques secondes.
+</p>
 </div>
+""", unsafe_allow_html=True)
 
-<div style="margin:40px 0;">
+with c2:
+    st.markdown("""
+<div class="card">
+<h3>🔒 Sécurisé</h3>
+<p>
+Vos données restent protégées.
+</p>
+</div>
+""", unsafe_allow_html=True)
 
-<a href="https://moteur-de-recherche-it-mzztfdhtggde7omb8uhzek.streamlit.app/" class="btn">
+with c3:
+    st.markdown("""
+<div class="card">
+<h3>📚 +1000 solutions</h3>
+<p>
+Une base de connaissances complète.
+</p>
+</div>
+""", unsafe_allow_html=True)
+
+st.write("")
+st.write("")
+
+st.markdown("""
+<div class="center">
+
+<a class="bigbutton blue"
+href="https://moteur-de-recherche-it-mzztfdhtggde7omb8uhzek.streamlit.app/">
 🚀 Accéder à l'application
 </a>
 
-<a href="https://moteur-de-recherche-it-mzztfdhtggde7omb8uhzek.streamlit.app/Offres" class="btn-gold">
-💳 Voir les offres / Payer
+<a class="bigbutton gold"
+href="https://moteur-de-recherche-it-mzztfdhtggde7omb8uhzek.streamlit.app/Offres">
+💳 Offres Premium
 </a>
 
-<a href="https://github.com/vanschoor-stephanie/moteur-de-recherche-IT" class="btn-dark">
-🐙 Voir sur GitHub
+<a class="bigbutton dark"
+href="https://github.com/vanschoor-stephanie/moteur-de-recherche-IT">
+🐙 GitHub
 </a>
 
 </div>
+""", unsafe_allow_html=True)
 
+st.write("")
+st.write("---")
+
+st.markdown("""
 <div class="footer">
-    <p>IT Pro - Par Stéphanie Vanschoor</p>
-    <p style="font-size:12px;">Version 2.0 - 2026</p>
+
+<b>IT Pro</b><br>
+
+Développé par Stéphanie Vanschoor
+
+<br><br>
+
+Version 2.0 • 2026
+
 </div>
-
-<script>
-function search() {
-    var query = document.getElementById("search").value;
-
-    if(query.trim() !== ""){
-        window.location.href =
-        "https://moteur-de-recherche-it-mzztfdhtggde7omb8uhzek.streamlit.app/?q="
-        + encodeURIComponent(query);
-    }
-}
-</script>
-
-</body>
-</html>
-"""
-
-st.markdown(html, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
