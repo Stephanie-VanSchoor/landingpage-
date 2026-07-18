@@ -257,7 +257,7 @@ st.markdown("""
 <div class="footer">
 
 <b>IT Pro</b><br>
-Développé par Stéphanie Vanschoor
+Développé par IT Pro Solutions
 
 <br><br>
 
