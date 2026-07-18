@@ -1,4 +1,3 @@
-import webbrowser
 import os
 
 html = """
@@ -6,11 +5,9 @@ html = """
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IT Pro - Assistant IT</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
             font-family: Arial, sans-serif;
             text-align: center;
@@ -23,10 +20,8 @@ html = """
             justify-content: center;
             align-items: center;
         }
-
         h1 { font-size: 52px; color: #00d4ff; margin-bottom: 10px; }
         .subtitle { font-size: 20px; color: #aaa; margin-bottom: 30px; }
-
         .search-container { margin: 30px 0; width: 100%; max-width: 600px; }
         .search-container input[type="text"] {
             padding: 16px 20px;
@@ -39,7 +34,6 @@ html = """
             outline: none;
         }
         .search-container input[type="text"]:focus { border-color: #00d4ff; }
-
         .btn, .btn-gold, .btn-dark {
             padding: 15px 40px;
             border: none;
@@ -58,7 +52,6 @@ html = """
         .btn-gold:hover { background: #e6c200; transform: scale(1.03); }
         .btn-dark { background: #333; color: white; }
         .btn-dark:hover { background: #555; transform: scale(1.03); }
-
         .features {
             display: flex;
             justify-content: center;
@@ -76,10 +69,8 @@ html = """
         .feature:hover { transform: translateY(-5px); border-color: #00d4ff; }
         .feature h3 { color: #00d4ff; font-size: 22px; margin-bottom: 8px; }
         .feature p { color: #bbb; font-size: 15px; }
-
         .footer { margin-top: 50px; color: #555; font-size: 14px; line-height: 1.8; }
         .footer a { color: #00d4ff; text-decoration: none; }
-
         @media (max-width: 700px) {
             h1 { font-size: 32px; }
             .subtitle { font-size: 16px; }
@@ -147,13 +138,12 @@ html = """
 </html>
 """
 
-# Créer le fichier HTML
-with open("landing_page.html", "w", encoding="utf-8") as f:
+# Sauvegarder le fichier index.html
+with open("index.html", "w", encoding="utf-8") as f:
     f.write(html)
 
-# Ouvrir dans le navigateur
-chemin = os.path.abspath("landing_page.html")
-webbrowser.open(f"file://{chemin}")
-
-print("✅ Landing page créée et ouverte dans votre navigateur !")
-print(f"📁 Fichier : {chemin}")
+print("✅ Fichier index.html généré !")
+print("📁 Tu peux maintenant :")
+print("   - L'ouvrir dans ton navigateur")
+print("   - Le déposer sur GitHub Pages")
+print("   - Le partager avec n'importe qui")
