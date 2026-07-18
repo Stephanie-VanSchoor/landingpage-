@@ -141,7 +141,87 @@ with col3:
     </p>
     </div>
     """, unsafe_allow_html=True)
+# TARIFS
 
+st.write("")
+st.write("")
+
+st.markdown("""
+<div style="text-align:center;">
+
+<h2 style="color:#00d4ff;font-size:40px;">
+💳 Nos offres
+</h2>
+
+<p style="color:#aaa;font-size:18px;">
+Choisissez la formule adaptée à vos besoins
+</p>
+
+</div>
+""", unsafe_allow_html=True)
+
+
+prix1, prix2, prix3 = st.columns(3)
+
+
+with prix1:
+    st.markdown("""
+    <div class="card">
+
+    <h3>🆓 Gratuit</h3>
+
+    <h2 style="color:white;">
+    0 €
+    </h2>
+
+    <p>
+    ✔ Accès découverte<br>
+    ✔ Diagnostics de base<br>
+    ✔ Recherche limitée
+    </p>
+
+    </div>
+    """, unsafe_allow_html=True)
+
+
+with prix2:
+    st.markdown("""
+    <div class="card" style="border:2px solid #00d4ff;">
+
+    <h3>⭐ Pro</h3>
+
+    <h2 style="color:#00d4ff;">
+    9,99 €/mois
+    </h2>
+
+    <p>
+    ✔ Diagnostics avancés<br>
+    ✔ Historique des recherches<br>
+    ✔ Support prioritaire
+    </p>
+
+    </div>
+    """, unsafe_allow_html=True)
+
+
+with prix3:
+    st.markdown("""
+    <div class="card">
+
+    <h3>🏢 Business</h3>
+
+    <h2 style="color:#FFD700;">
+    29,99 €/mois
+    </h2>
+
+    <p>
+    ✔ Multi-utilisateurs<br>
+    ✔ Solutions entreprise<br>
+    ✔ Support renforcé
+    </p>
+
+    </div>
+    """, unsafe_allow_html=True)
 
 
 # BOUTONS
